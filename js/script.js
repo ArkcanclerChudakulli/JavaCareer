@@ -1,0 +1,368 @@
+let money = 0;
+let questions_count = 0;
+let correctAnswer;
+let correct = 0;
+let options;
+let skill = 'Английский язык';
+
+function mirror(txt, speed = 20, color){
+$('#mirror_txt').replaceWith( '<marquee id="mirror_txt" class="font text-center align-middle ' + color + '" direction="up" scrolldelay="1" scrollamount="' + speed + '" behavior="slide"><font id="road_text">' + txt + '</font></marquee>' );
+}
+
+function mirror_eval(txt, speed = 20, color){
+$('#eval_txt').replaceWith( '<marquee id="eval_txt" class="font text-center align-middle ' + color + '" direction="up" scrolldelay="1" scrollamount="' + speed + '" behavior="slide"><font id="road_text">' + txt + '</font></marquee>' );
+}
+
+function choose(num){
+	if(options[num-1] == correctAnswer){
+		mirror_eval('Верно', 20, "green");
+		correct++;
+		win();
+	} else {
+		mirror_eval('Неверно. Правильный ответ: "' + correctAnswer + '"', 20, "red");
+	}
+	next();
+}
+
+function next(){
+	if(questions_count>=questions.length-1){
+		$('.game_button').prop('disabled', true);
+		let overall = questions.length;
+		let percent = calculatePercent(correct,overall);
+		let msg = 'Вы правильно ответили: ' + percent + '%('
+		+ correct + '/' + overall + ').';
+		let color = 'red';
+		if(percent>=65){
+			skill+=',<br>Основы Java';
+			$('#skill').html(skill);
+			color = 'green';
+			msg+=' Поздравляем! Вы освоили "Основы Java".'; 
+		} else{
+			msg+=' Попробуйте ещё раз.'
+		}
+		mirror(msg, 20, color);
+		emptyOptions();
+		questions_count=0;
+		shuffle(questions);
+	} else {
+		questions_count++;
+		mirror(questions[questions_count].definition, 20, 'blue');
+		randomAnswers();
+	}
+}
+
+function calculatePercent(correct,overall){
+	let num = correct/overall*100;
+	return parseFloat(num).toFixed(0);
+}
+
+function win(){
+	$('#money').html(new Intl.NumberFormat().format(money+=10000));
+	levelup();
+}
+
+function levelup(){
+	if(money>180000) $('#status').html('Синьор');
+	else if(money>120000) $('#status').html('Мидл');
+	else if(money>60000) $('#status').html('Джуниор');
+	else if(money>0) $('#status').html('Стажёр');
+}
+
+function toggle(){
+	if($('#learn').is('[disabled]')){
+		$('#learn').prop('disabled', false);
+		$('.game_button').prop('disabled', true);
+	} else {
+		$('#learn').html('Java Career');
+		$('#learn').prop('disabled', true);
+		$('.game_button').prop('disabled', false);
+	}
+}
+
+function learn(){
+	$('#game').show();
+	toggle();
+	randomAnswers();
+	mirror(questions[questions_count].definition, 20, 'blue');
+}
+
+function randomAnswers(){
+	correctAnswer = questions[questions_count].options[0];
+	options = questions[questions_count].options;
+	shuffle(options);
+	$('#first').html(options[0]);
+	$('#second').html(options[1]);
+	$('#third').html(options[2]);
+	$('#forth').html(options[3]);
+}
+
+function emptyOptions(){
+	$('#first').html('');
+	$('#second').html('');
+	$('#third').html('');
+	$('#forth').html('');
+}
+
+function removeItemOnce(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
+let questions = [
+		{
+			definition: 'Какой Interface НЕ наследуется от интерфейса Collection?',
+			options: ['Map',
+					  'List',
+					  'Queue',
+					  'Set']
+		},
+		{
+			definition: 'Какой return type у методов add и remove интерфейса Collection?',
+			options: ['boolean',
+					  'void',
+					  'int',
+					  'T']
+		},
+		{
+			definition: 'Какого метода НЕТ в интерфейсе List?',
+			options: ['put',
+					  'get',
+					  'set',
+					  'indexOf']
+		},
+		{
+			definition: 'Какой метод у функционального интерфейсе Predicate?',
+			options: ['test',
+					  'apply',
+					  'get',
+					  'accept']
+		},
+		{
+			definition: "Какой scope стоит у Bean'ов в Spring'e по умолчанию?",
+			options: ['Singleton',
+					  'Prototype',
+					  'Request',
+					  'Session']
+		},
+		{
+			definition: "Какого ApplicationContext НЕ существует в Spring'e?",
+			options: ['SimpleApplicationContext',
+					  'FileSystemXmlApplicationContext',
+					  'ClassPathXmlApplicationContext',
+					  'WebApplicationContext']
+		},
+		{
+			definition: "Какая аннотация НЕ входит в @SpringBootApplication?",
+			options: ['@SpringApplication',
+					  '@EnableAutoConfiguration',
+					  '@ComponentScan',
+					  '@Configuration']
+		},
+		{
+			definition: "Где НЕЛЬЗЯ использовать аннотацию @Autowired?",
+			options: ['Перед классом',
+					  'Перед полем',
+					  'Перед конструктором',
+					  'Перед аргументом конструктора']
+		},
+		{
+			definition: "Какой по умолчанию load factor для HashMap?",
+			options: ['0.75',
+					  '0.5',
+					  '0.25',
+					  '1']
+		},
+		{
+			definition: "Сколько Bucket'ов по умолчанию у HashMap?",
+			options: ['16',
+					  '8',
+					  '4',
+					  '32']
+		},
+		{
+			definition: "Сколько битов в hash-функции MD5?",
+			options: ['128',
+					  '256',
+					  '64',
+					  '32']
+		},
+		{
+			definition: "Какая hash-функции используется для Bitcoin?",
+			options: ['SHA256',
+					  'MD5',
+					  'MD4',
+					  'CRC-32']
+		},
+		{
+			definition: "Сколько рекомендуется делать партиций относительно сервисов (consumers) в Kafka?",
+			options: ['По 4 на сервис',
+					  'По 1 на сервис',
+					  'По 10 на сервис',
+					  'По 40 на сервис']
+		},
+		{
+			definition: "Сколько рекомендуется делать минимально реплик в Kafka для обеспечения отказоустойчивости?",
+			options: ['3 реплики',
+					  '8 реплик',
+					  '16 реплик',
+					  '32 реплики']
+		},
+		{
+			definition: "Какого метода НЕТ в интерфейсе Map?",
+			options: ['deleteIfExists',
+					  'entrySet',
+					  'putIfAbsent',
+					  'getOrDefault']
+		},
+		{
+			definition: "В какой версии Java появилось ключевое слово var?",
+			options: ['10',
+					  '9',
+					  '8',
+					  '11']
+		},
+		{
+			definition: "Какой элемент отсутствует в Node (внутренняя имплементация HashMap)?",
+			options: ['Node <K,V> previous',
+					  'int hash',
+					  'Node <K,V> next',
+					  'V value']
+		},
+		{
+			definition: "По какой формуле в HashMap вычисляется индекс Bucket'a?",
+			options: ['hash & (n - 1)',
+					  'hash | (n - 1)',
+					  'hash % (n - 1)',
+					  'hash ^ (n - 1)']
+		},
+		{
+			definition: "Какая алгоритмическая сложность у collision resolution mechanism, введённого в 8 версии Java для HashMap?",
+			options: ['O(log(n))',
+					  'O(n)',
+					  'O(1)',
+					  'O(n²)']
+		},
+		{
+			definition: "Какая http ошибка (Client Error) имеет код 400?",
+			options: ['Bad Request',
+					  'Unauthorized',
+					  'Forbidden',
+					  'Not Found']
+		},
+		{
+			definition: "Какую аннотацию нужно использовать для создания custom exception в Spring Boot?",
+			options: ['@ResponseStatus',
+					  '@ResponseStatusException',
+					  '@CustomException',
+					  '@Exception']
+		},
+		{
+			definition: "Что нужно прописать в application.properties, чтобы Spring Boot включил message в тело Response'a?",
+			options: ['server.error.include-message=always',
+					  'client.error.include-message=always',
+					  'server.error.include-message=true',
+					  'client.error.include-message=true']
+		},
+		{
+			definition: "Какой метод класса Optional принимает в качестве аргумента Supplier?",
+			options: ['orElseGet',
+					  'orElse',
+					  'ofNullable',
+					  'ifPresent']
+		},
+		{
+			definition: "Какая из этих аннотаций Spring'a предназначена для Bean'a, выполняющего бизнес-логику?",
+			options: ['@Service',
+					  '@Component',
+					  '@Controller',
+					  '@Repository']
+		},
+		{
+			definition: "Выберете верное утверждение касательно @PostConstruct и @PreDestroy методов в Spring'е?",
+			options: ['Не могут иметь аргументов',
+					  'Обязаны быть public',
+					  'Обязаны возвращать void',
+					  'Должны называться init и destroy']
+		},
+		{
+			definition: "Какой принцип скрывается за буквой S в аббревиатуре SOLID?",
+			options: ['Принцип единственной ответственности',
+					  'Принцип открытости/закрытости',
+					  'Принцип подстановки Лисков',
+					  'Принцип разделения интерфейса']
+		},
+		{
+			definition: "Какой принцип скрывается за буквой O в аббревиатуре SOLID?",
+			options: ['Принцип открытости/закрытости',
+					  'Принцип инверсии зависимостей',
+					  'Принцип подстановки Лисков',
+					  'Принцип разделения интерфейса']
+		},
+		{
+			definition: "Какой принцип скрывается за буквой L в аббревиатуре SOLID?",
+			options: ['Принцип подстановки Лисков',
+					  'Принцип инверсии зависимостей',
+					  'Принцип единственной ответственности',
+					  'Принцип разделения интерфейса']
+		},
+		{
+			definition: "Какой принцип скрывается за буквой I в аббревиатуре SOLID?",
+			options: ['Принцип разделения интерфейса',
+					  'Принцип инверсии зависимостей',
+					  'Принцип единственной ответственности',
+					  'Принцип открытости/закрытости']
+		},
+		{
+			definition: "Какой принцип скрывается за буквой D в аббревиатуре SOLID?",
+			options: ['Принцип инверсии зависимостей',
+					  'Принцип разделения интерфейса',
+					  'Принцип единственной ответственности',
+					  'Принцип открытости/закрытости']
+		},
+		{
+			definition: "Что мы должны указать в скобках к аннотации @Autowired, если Bean не обязателен?",
+			options: ['(required=false)',
+					  '("optional")',
+					  '(min=0)',
+					  '(mandatory=false)']
+		},
+		{
+			definition: "Какой аннотацией нужно пометить поле в JPA, чтобы оно НЕ сохранялось в базу данных?",
+			options: ['@Transient',
+					  '@Temporal',
+					  '@NonPersistent',
+					  '@Volatile']
+		},
+		{
+			definition: "Какой метод в JPA вернёт detached объект под контроль EntityManager?",
+			options: ['merge',
+					  'attach',
+					  'persist',
+					  'reattach']
+		},
+		{
+			definition: "Какое свойство мы должны добавить в аннотацию при указании CascadeType.REMOVE, чтобы при нарушении связи с parent объектом зависимые элементы были удалены?",
+			options: ['orphanRemoval=true',
+					  'childRemoval=true',
+					  'dependentRemoval=true',
+					  'subElementRemoval=true']
+		}
+];
+ 
+function shuffle(array) {
+  array.sort(() => Math.random() - 0.5);
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function load(){
+	shuffle(questions);
+	mirror('Для изучения Java Вам нужно будет ответить на вопросы (1 правильный вариант ответа из 4)', 3, 'black');
+}
