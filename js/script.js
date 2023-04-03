@@ -57,7 +57,7 @@ function calculatePercent(correct,overall){
 }
 
 function win(){
-	$('#money').html(new Intl.NumberFormat().format(money+=10000));
+	$('#money').html(new Intl.NumberFormat().format(money+=5000));
 	levelup();
 }
 
@@ -112,7 +112,7 @@ function removeItemOnce(arr, value) {
 }
 
 let questions = [
-		{
+		 {
 			definition: 'Какой Interface НЕ наследуется от интерфейса Collection?',
 			options: ['Map',
 					  'List',
@@ -349,6 +349,363 @@ let questions = [
 					  'childRemoval=true',
 					  'dependentRemoval=true',
 					  'subElementRemoval=true']
+		},
+		{
+			definition: "Какой минимальный уровень изоляции транзакций защищает от Dirty Read?",
+			options: ['Read Commited',
+					  'Read Uncommited',
+					  'Repeatable Read',
+					  'Serializable']
+		},
+		{
+			definition: "Какой минимальный уровень изоляции транзакций защищает от Nonrepeatable Read?",
+			options: ['Repeatable Read',
+					  'Read Uncommited',
+					  'Read Commited',
+					  'Serializable']
+		},
+		{
+			definition: "Какой минимальный уровень изоляции транзакций защищает от Phantom Read?",
+			options: ['Serializable',
+					  'Read Uncommited',
+					  'Read Commited',
+					  'Repeatable Read']
+		},
+		{
+			definition: "Как создать Daemon поток?",
+			options: ['Вызвать метод setDaemon(true)',
+					  'Унаследоваться от класса Daemon',
+					  'Имплементировать интерфейс Daemon',
+					  'Вызвать метод daemon()']
+		},
+		{
+			definition: "Какой из этих методов класса Thread статический?",
+			options: ['interrupted()',
+					  'interrupt()',
+					  'isInterrupted()',
+					  'isAlive()']
+		},
+		{
+			definition: "Какой из этих методов класса Thread НЕ выбрасывает InterruptedException?",
+			options: ['interrupt()',
+					  'sleep()',
+					  'join()',
+					  'wait()']
+		},
+		{
+			definition: "Какой из этих методов класса Thread заставит процессор переключиться на обработку других потоков?",
+			options: ['yield()',
+					  'sleep()',
+					  'notify()',
+					  'wait()']
+		},
+		{
+			definition: "Каким может быть максимальный приоритет в классе Thread?",
+			options: ['10',
+					  '5',
+					  '16',
+					  '100']
+		},
+		{
+			definition: "Какого состояния потока НЕ существует?",
+			options: ['IN PROGRESS',
+					  'NEW',
+					  'RUNNABLE',
+					  'TERMINATED']
+		},
+		{
+			definition: "Как называется программирование, когда каждая следующая задача не ждёт окончания предыдущей?",
+			options: ['Асинхронное',
+					  'Синхронное',
+					  'Параллельное',
+					  'Многопоточное']
+		},
+		{
+			definition: "Если у нас 1 поток записывает данные в переменную, а другие из неё читают, какое ключевое слово поможет нам обеспечить актуальность значения переменной?",
+			options: ['volatile',
+					  'synchronized',
+					  'transient',
+					  'static']
+		},
+		{
+			definition: "Какой из этих методов освобождает монитор?",
+			options: ['Wait',
+					  'Sleep',
+					  'Notify',
+					  'NotifyAll']
+		},
+		{
+			definition: "Как называется ситуация, когда менее приоритетные потоки ждут слишком долгое время, прежде чем могут запуститься?",
+			options: ['Lock starvation',
+					  'Deadlock',
+					  'Livelock',
+					  'Collision']
+		},
+		{
+			definition: "Какого метода нет в интерфейсе Lock?",
+			options: ['isLocked',
+					  'lock',
+					  'unlock',
+					  'tryLock']
+		},
+		{
+			definition: "Что произойдёт, если после старта User Thread потока вызвать метод setDaemon(true)?",
+			options: ['Будет выброшено исключение IllegalThreadStateException',
+					  'Поток станет Daemon',
+					  'Ничего не произойдёт',
+					  'Поток остановится']
+		},
+		{
+			definition: "Что рекомендуется использовать для того, чтобы прервать один поток из другого потока?",
+			options: ['Методы interrupt() и isInterrupted()',
+					  'Метод stop()',
+					  'throw InterruptedException',
+					  'Метод terminate()']
+		},
+		{
+			definition: "Какой метод ExecutorService нужно использовать, чтобы подождать окончания работы потоков ThreadPool'a?",
+			options: ['awaitTermination',
+					  'wait',
+					  'join',
+					  'shutDown']
+		},
+		{
+			definition: "Какого параметра НЕТ в методе scheduleAtFixedRate класса ScheduledThreadPool?",
+			options: ['Callable<V> callable',
+					  'long initialDelay',
+					  'long period',
+					  'TimeUnit unit']
+		},
+		{
+			definition: "Что произойдёт, если у объекта Future вызвать метод get, когда результат из другого потока ещё не получен?",
+			options: ['Поток заблокируется и будет ждать результат',
+					  'Вернётся null',
+					  'Поток продолжит работу',
+					  'Выбросится исключение']
+		},
+		{
+			definition: "Какого метода НЕТ в синхранизаторе Semaphore?",
+			options: ['countDown()',
+					  'acquire()',
+					  'release()',
+					  'isFair()']
+		},
+		{
+			definition: "Какой метод синхранизатора CountDownLatch нужно использовать в методе run потоков для их приостановки, пока счётчик не достигнет 0?",
+			options: ['await()',
+					  'acquire()',
+					  'tryAcquire()',
+					  'wait()']
+		},
+		{
+			definition: "Какой класс можно использовать для того, чтобы 2 потока могли одновременно получить друг от друга данные?",
+			options: ['Exchanger',
+					  'CountDownLatch',
+					  'Semaphore',
+					  'Future']
+		},
+		{
+			definition: "В какую область памяти попадёт объект, если он пережил хотя бы 1 сборку мусора?",
+			options: ['Survivor',
+					  'Eden',
+					  'Tenured',
+					  'Permanent generation']
+		},
+		{
+			definition: "Какого из этих Garbage Collector'ов не было до 7 Java?",
+			options: ['G1 Garbage Collector',
+					  'Parallel Garbage Collector',
+					  'CMS Garbage Collector',
+					  'Serial Garbage Collector']
+		},
+		{
+			definition: "В какой компонент Spring'a входит AOP?",
+			options: ['Это отдельный компонент',
+					  'В Spring Core',
+					  'В Spring Data',
+					  'В Spring Web']
+		},
+		{
+			definition: "На какой стадии жизни Bean'a отработает BeanPostProcessor?",
+			options: ['Pre-Initialization',
+					  'Instantiation',
+					  'Populating properties',
+					  'AfterPropertiesSet']
+		},
+		{
+			definition: "Какой параметр аннотации @Query нужно указать, чтобы использовать SQL?",
+			options: ['nativeQuery = true',
+					  'language = "sql"',
+					  'sql = true',
+					  'jpql = false']
+		},
+		{
+			definition: "Какого параметра НЕТ в методе toPredicate интерфейса Specification, относящегося к Spring Data?",
+			options: ['Predicate<T> predicate',
+					  'Root<T> root',
+					  'CriteriaQuery<?> query',
+					  'CriteriaBuilder criteriaBuilder']
+		},
+		{
+			definition: "Какое значение параметра Propagation аннотации @Transactional стоит по умолчанию?",
+			options: ['required',
+					  'supports"',
+					  'requires_new',
+					  'never']
+		},
+		{
+			definition: 'Что произойдёт, если к началу вызова метода с аннотацией @Transactional(propagation="supports") у нас нет активной транзакции?',
+			options: ['Метод отработает без транзакции',
+					  'Создастся новая транзакция',
+					  'Будет выброшено исключение',
+					  'Метод будет проигнорирован']
+		},
+		{
+			definition: "Какое значение параметра Propagation аннотации @Transactional нужно использовать, чтобы метод выполнился в отдельной транзакции?",
+			options: ['requires_new',
+					  'supports"',
+					  'required',
+					  'mandatory']
+		},
+		{
+			definition: "Какое значение параметра Propagation аннотации @Transactional нужно использовать, чтобы в случае ROLLBACK'a мы могли вернуться к Save Point?",
+			options: ['nested',
+					  'supports',
+					  'never',
+					  'mandatory']
+		},
+		{
+			definition: 'Что произойдёт, если к началу вызова метода с аннотацией @Transactional(propagation="mandatory") у нас нет активной транзакции?',
+			options: ['Будет выброшено исключение',
+					  'Создастся новая транзакция',
+					  'Метод отработает без транзакции',
+					  'Метод будет проигнорирован']
+		},
+		{
+			definition: 'Что произойдёт, если к началу вызова метода с аннотацией @Transactional(propagation="required") у нас нет активной транзакции?',
+			options: ['Создастся новая транзакция',
+					  'Будет выброшено исключение',
+					  'Метод отработает без транзакции',
+					  'Метод будет проигнорирован']
+		},
+		{
+			definition: 'Что произойдёт, если из нетранзакционного метода вызвать метода с аннотацией @Transactional(propagation="required")?',
+			options: ['Метод отработает без транзакции',
+					  'Создастся новая транзакция',
+					  'Будет выброшено исключение',
+					  'Метод будет проигнорирован']
+		},
+		{
+			definition: 'Какой из этих компонентов MVC отвечает за выбор отображения данных модели?',
+			options: ['View Resolver',
+					  'Controller',
+					  'DispatcherServlet',
+					  'Handler Mapping']
+		},
+		{
+			definition: 'Какую аннотацию включает в себя @RestController по сравнению с @Controller?',
+			options: ['@ResponseBody',
+					  '@RequestMapping',
+					  '@GetMapping',
+					  '@Http']
+		},
+		{
+			definition: "Что по умолчанию НЕ предосталяет Spring Boot по сравнению со Spring'ом?",
+			options: ['JUnit',
+					  'Автоконфигурация для Jackson',
+					  'Tomcat',
+					  'Специальный файл для конфигурации DataSource']
+		},
+		{
+			definition: "Какой класс/интерфейс Spring'а выполняет самую первую стадию подготовки Bean'ов?",
+			options: ['XmlBeanDefinitionReader',
+					  'ClassPathXmlApplicationContext',
+					  'BeanPostProcessor',
+					  'BeanFactory']
+		},
+		{
+			definition: "В какой момент в Spring'е создаются prototype-Bean'ы?",
+			options: ['Когда к ним происходит обращение в коде',
+					  'Когда поднимается Spring Context',
+					  "Сразу после Singleton-Bean'ов",
+					  "До Singleton-Bean'ов"]
+		},
+		{
+			definition: "Где хранятся инстансы prototype-Bean'ов?",
+			options: ['Нигде',
+					  "В Spring Container'е",
+					  "В BeanFactory",
+					  "В Spring Context'е"]
+		},
+		{
+			definition: "В какой момент BeanPostProcessor донастраивает Bean'ы?",
+			options: ['До того как они попадают в Spring Container',
+					  "Сразу после того, как они помещаются в Spring Container",
+					  "В зависимости от настроек, указанных в SpringApplication.properties",
+					  "Не детерменировано"]
+		},
+		{
+			definition: "Какой из этих методов есть в интерфейсе BeanPostProcessor?",
+			options: ['postProcessBeforeInitialization',
+					  "init",
+					  "postConstruct",
+					  "preDestroy"]
+		},
+		{
+			definition: 'Что будет, если в XML properties файл добавить "context:annotation-config"?',
+			options: ["Spring создаст Bean'ы для BeanPostProcessor'ов",
+					  "Ничего не произойдёт",
+					  "Spring добавит аннотацию @Autowired для всех полей всех Bean'ов",
+					  "Spring будет использовать Bean с аннотацией @Configuration вместо XML properties"]
+		},
+		{
+			definition: "Что произойдёт, если при использовании HTTP метода PUT указанного ресурса не существует?",
+			options: ['Он будет создан',
+					  "Ничего не произойдёт",
+					  'Error 400 "Bad Request"',
+					  'Error 404 "Resource not found"']
+		},
+		{
+			definition: "Что мы будем использовать для 3 фазы 3-фазового конструктора при настройке Bean'a в Spring'e?",
+			options: ['ContextListener',
+					  "Обычный конструктор Java",
+					  '@PostConstruct',
+					  "В Spring'e нельзя написать 3-фазовый конструктор"]
+		},
+		{
+			definition: "В какой момент жизненного цикла Bean'a в Spring'e отработает BeanFactoryPostProcessor?",
+			options: ["После BeanDefinitionReader'a, но до BeanFactory",
+					  "До BeanDefinitionReader'a",
+					  "После BeanFactory, но до BeanPostProcessor'а",
+					  "После BeanPostProcessor'а"]
+		},
+		{
+			definition: "Чем в Spring'e является ClassPathBeanDefinitionScanner?",
+			options: ["ResourceLoaderAware",
+					  "BeanFactoryPostProcessor",
+					  "BeanPostProcessor",
+					  "XmlBeanDefinitionReader"]
+		},
+		{
+			definition: "Чем в Spring'e является ConfigurationClassPostProcessor?",
+			options: ["BeanFactoryPostProcessor",
+					  "ResourceLoaderAware",
+					  "BeanPostProcessor",
+					  "XmlBeanDefinitionReader"]
+		},
+		{
+			definition: "Кто в Spring'e регистрирует ConfigurationClassPostProcessor?",
+			options: ["AnnotationConfigApplicationContext",
+					  "XmlApplicationContext",
+					  "ClassPathBeanDefinitionScanner",
+					  "XmlBeanDefinitionReader"]
+		},
+		{
+			definition: "Какой интерфейс Spring'а нужно имплементировать, чтобы создать custom scope?",
+			options: ["BeanFactoryPostProcessor",
+					  "ApplicationContext",
+					  "BeanPostProcessor",
+					  "BeanDefinitionReader"]
 		}
 ];
  
