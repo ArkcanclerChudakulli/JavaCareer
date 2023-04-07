@@ -26,29 +26,43 @@ function choose(num){
 
 function next(){
 	if(questions_count>=questions.length-1){
-		$('.game_button').prop('disabled', true);
 		let overall = questions.length;
 		let percent = calculatePercent(correct,overall);
 		let msg = 'Вы правильно ответили: ' + percent + '%('
 		+ correct + '/' + overall + ').';
 		let color = 'red';
 		if(percent>=65){
-			skill+=',<br>Основы Java';
+			completeModule();
+			skill+=',<br>' + current_module;
 			$('#skill').html(skill);
 			color = 'green';
-			msg+=' Поздравляем! Вы освоили "Основы Java".'; 
+			msg+=' Поздравляем! Вы освоили "' + current_module + '".';
 		} else{
-			msg+=' Попробуйте ещё раз.'
+			msg+=' Попробуйте ещё раз.';
+			if(!learned.includes(current_module)){
+				money = 0;
+				$('#money').html(money);
+				$('#status').html('Безработный');
+			}
 		}
+		$('.module').show();
+		$('#game').hide();
 		mirror(msg, 20, color);
-		emptyOptions();
-		questions_count=0;
 		shuffle(questions);
 	} else {
-		questions_count++;
+		$('#questions_count').html(++questions_count + 1);
 		mirror(questions[questions_count].definition, 20, 'blue');
 		randomAnswers();
 	}
+}
+
+function completeModule(){
+	learned.push(current_module);
+	let img = $('#module_' + current_module_id);
+	img.removeClass('pointer');
+	img.addClass('completed');
+	img.attr("src", img.attr("src").replace('img/', 'img/completed/'));
+	img.attr("onclick", '#');
 }
 
 function calculatePercent(correct,overall){
@@ -57,33 +71,19 @@ function calculatePercent(correct,overall){
 }
 
 function win(){
-	$('#money').html(new Intl.NumberFormat().format(money+=5000));
-	levelup();
-}
-
-function levelup(){
-	if(money>180000) $('#status').html('Синьор');
-	else if(money>120000) $('#status').html('Мидл');
-	else if(money>60000) $('#status').html('Джуниор');
-	else if(money>0) $('#status').html('Стажёр');
-}
-
-function toggle(){
-	if($('#learn').is('[disabled]')){
-		$('#learn').prop('disabled', false);
-		$('.game_button').prop('disabled', true);
-	} else {
-		$('#learn').html('Java Career');
-		$('#learn').prop('disabled', true);
-		$('.game_button').prop('disabled', false);
+	if(!learned.includes(current_module)){
+		$('#money').html(new Intl.NumberFormat().format(money+=5000));
+		levelup();
 	}
 }
 
-function learn(){
-	$('#game').show();
-	toggle();
-	randomAnswers();
-	mirror(questions[questions_count].definition, 20, 'blue');
+function levelup(){
+	if(money>300000) $('#status').html('Архитектор');
+	else if(money>240000) $('#status').html('Синьор');
+	else if(money>180000) $('#status').html('Мидл+');
+	else if(money>120000) $('#status').html('Мидл');
+	else if(money>60000) $('#status').html('Джуниор');
+	else if(money>0) $('#status').html('Стажёр');
 }
 
 function randomAnswers(){
@@ -111,8 +111,9 @@ function removeItemOnce(arr, value) {
   return arr;
 }
 
-let questions = [
+let questions_bank = [
 		 {
+			module: 'Java Core',
 			definition: 'Какой Interface НЕ наследуется от интерфейса Collection?',
 			options: ['Map',
 					  'List',
@@ -120,6 +121,7 @@ let questions = [
 					  'Set']
 		},
 		{
+			module: 'Java Core',
 			definition: 'Какой return type у методов add и remove интерфейса Collection?',
 			options: ['boolean',
 					  'void',
@@ -127,6 +129,7 @@ let questions = [
 					  'T']
 		},
 		{
+			module: 'Java Core',
 			definition: 'Какого метода НЕТ в интерфейсе List?',
 			options: ['put',
 					  'get',
@@ -134,6 +137,7 @@ let questions = [
 					  'indexOf']
 		},
 		{
+			module: 'Java Core',
 			definition: 'Какой метод у функционального интерфейсе Predicate?',
 			options: ['test',
 					  'apply',
@@ -141,6 +145,7 @@ let questions = [
 					  'accept']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Какой scope стоит у Bean'ов в Spring'e по умолчанию?",
 			options: ['Singleton',
 					  'Prototype',
@@ -148,6 +153,7 @@ let questions = [
 					  'Session']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Какого ApplicationContext НЕ существует в Spring'e?",
 			options: ['SimpleApplicationContext',
 					  'FileSystemXmlApplicationContext',
@@ -155,6 +161,7 @@ let questions = [
 					  'WebApplicationContext']
 		},
 		{
+			module: 'Spring Boot',
 			definition: "Какая аннотация НЕ входит в @SpringBootApplication?",
 			options: ['@SpringApplication',
 					  '@EnableAutoConfiguration',
@@ -162,6 +169,7 @@ let questions = [
 					  '@Configuration']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Где НЕЛЬЗЯ использовать аннотацию @Autowired?",
 			options: ['Перед классом',
 					  'Перед полем',
@@ -169,6 +177,7 @@ let questions = [
 					  'Перед аргументом конструктора']
 		},
 		{
+			module: 'Java Core',
 			definition: "Какой по умолчанию load factor для HashMap?",
 			options: ['0.75',
 					  '0.5',
@@ -176,6 +185,7 @@ let questions = [
 					  '1']
 		},
 		{
+			module: 'Java Core',
 			definition: "Сколько Bucket'ов по умолчанию у HashMap?",
 			options: ['16',
 					  '8',
@@ -183,6 +193,7 @@ let questions = [
 					  '32']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Сколько битов в hash-функции MD5?",
 			options: ['128',
 					  '256',
@@ -190,6 +201,7 @@ let questions = [
 					  '32']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какая hash-функции используется для Bitcoin?",
 			options: ['SHA256',
 					  'MD5',
@@ -197,6 +209,7 @@ let questions = [
 					  'CRC-32']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Сколько рекомендуется делать партиций относительно сервисов (consumers) в Kafka?",
 			options: ['По 4 на сервис',
 					  'По 1 на сервис',
@@ -204,6 +217,7 @@ let questions = [
 					  'По 40 на сервис']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Сколько рекомендуется делать минимально реплик в Kafka для обеспечения отказоустойчивости?",
 			options: ['3 реплики',
 					  '8 реплик',
@@ -211,6 +225,7 @@ let questions = [
 					  '32 реплики']
 		},
 		{
+			module: 'Java Core',
 			definition: "Какого метода НЕТ в интерфейсе Map?",
 			options: ['deleteIfExists',
 					  'entrySet',
@@ -218,6 +233,7 @@ let questions = [
 					  'getOrDefault']
 		},
 		{
+			module: 'Java Core',
 			definition: "В какой версии Java появилось ключевое слово var?",
 			options: ['10',
 					  '9',
@@ -225,6 +241,7 @@ let questions = [
 					  '11']
 		},
 		{
+			module: 'Java Core',
 			definition: "Какой элемент отсутствует в Node (внутренняя имплементация HashMap)?",
 			options: ['Node <K,V> previous',
 					  'int hash',
@@ -232,6 +249,7 @@ let questions = [
 					  'V value']
 		},
 		{
+			module: 'Java Core',
 			definition: "По какой формуле в HashMap вычисляется индекс Bucket'a?",
 			options: ['hash & (n - 1)',
 					  'hash | (n - 1)',
@@ -239,6 +257,7 @@ let questions = [
 					  'hash ^ (n - 1)']
 		},
 		{
+			module: 'Java Core',
 			definition: "Какая алгоритмическая сложность у collision resolution mechanism, введённого в 8 версии Java для HashMap?",
 			options: ['O(log(n))',
 					  'O(n)',
@@ -246,6 +265,7 @@ let questions = [
 					  'O(n²)']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какая http ошибка (Client Error) имеет код 400?",
 			options: ['Bad Request',
 					  'Unauthorized',
@@ -253,6 +273,7 @@ let questions = [
 					  'Not Found']
 		},
 		{
+			module: 'Spring Boot',
 			definition: "Какую аннотацию нужно использовать для создания custom exception в Spring Boot?",
 			options: ['@ResponseStatus',
 					  '@ResponseStatusException',
@@ -260,6 +281,7 @@ let questions = [
 					  '@Exception']
 		},
 		{
+			module: 'Spring Boot',
 			definition: "Что нужно прописать в application.properties, чтобы Spring Boot включил message в тело Response'a?",
 			options: ['server.error.include-message=always',
 					  'client.error.include-message=always',
@@ -267,6 +289,7 @@ let questions = [
 					  'client.error.include-message=true']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой метод класса Optional принимает в качестве аргумента Supplier?",
 			options: ['orElseGet',
 					  'orElse',
@@ -274,6 +297,7 @@ let questions = [
 					  'ifPresent']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Какая из этих аннотаций Spring'a предназначена для Bean'a, выполняющего бизнес-логику?",
 			options: ['@Service',
 					  '@Component',
@@ -281,6 +305,7 @@ let questions = [
 					  '@Repository']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Выберете верное утверждение касательно @PostConstruct и @PreDestroy методов в Spring'е?",
 			options: ['Не могут иметь аргументов',
 					  'Обязаны быть public',
@@ -288,6 +313,7 @@ let questions = [
 					  'Должны называться init и destroy']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какой принцип скрывается за буквой S в аббревиатуре SOLID?",
 			options: ['Принцип единственной ответственности',
 					  'Принцип открытости/закрытости',
@@ -295,6 +321,7 @@ let questions = [
 					  'Принцип разделения интерфейса']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какой принцип скрывается за буквой O в аббревиатуре SOLID?",
 			options: ['Принцип открытости/закрытости',
 					  'Принцип инверсии зависимостей',
@@ -302,6 +329,7 @@ let questions = [
 					  'Принцип разделения интерфейса']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какой принцип скрывается за буквой L в аббревиатуре SOLID?",
 			options: ['Принцип подстановки Лисков',
 					  'Принцип инверсии зависимостей',
@@ -309,6 +337,7 @@ let questions = [
 					  'Принцип разделения интерфейса']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какой принцип скрывается за буквой I в аббревиатуре SOLID?",
 			options: ['Принцип разделения интерфейса',
 					  'Принцип инверсии зависимостей',
@@ -316,6 +345,7 @@ let questions = [
 					  'Принцип открытости/закрытости']
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Какой принцип скрывается за буквой D в аббревиатуре SOLID?",
 			options: ['Принцип инверсии зависимостей',
 					  'Принцип разделения интерфейса',
@@ -323,6 +353,7 @@ let questions = [
 					  'Принцип открытости/закрытости']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Что мы должны указать в скобках к аннотации @Autowired, если Bean не обязателен?",
 			options: ['(required=false)',
 					  '("optional")',
@@ -330,6 +361,7 @@ let questions = [
 					  '(mandatory=false)']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какой аннотацией нужно пометить поле в JPA, чтобы оно НЕ сохранялось в базу данных?",
 			options: ['@Transient',
 					  '@Temporal',
@@ -337,6 +369,7 @@ let questions = [
 					  '@Volatile']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какой метод в JPA вернёт detached объект под контроль EntityManager?",
 			options: ['merge',
 					  'attach',
@@ -344,6 +377,7 @@ let questions = [
 					  'reattach']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какое свойство мы должны добавить в аннотацию при указании CascadeType.REMOVE, чтобы при нарушении связи с parent объектом зависимые элементы были удалены?",
 			options: ['orphanRemoval=true',
 					  'childRemoval=true',
@@ -351,6 +385,7 @@ let questions = [
 					  'subElementRemoval=true']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какой минимальный уровень изоляции транзакций защищает от Dirty Read?",
 			options: ['Read Commited',
 					  'Read Uncommited',
@@ -358,6 +393,7 @@ let questions = [
 					  'Serializable']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какой минимальный уровень изоляции транзакций защищает от Nonrepeatable Read?",
 			options: ['Repeatable Read',
 					  'Read Uncommited',
@@ -365,6 +401,7 @@ let questions = [
 					  'Serializable']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какой минимальный уровень изоляции транзакций защищает от Phantom Read?",
 			options: ['Serializable',
 					  'Read Uncommited',
@@ -372,6 +409,7 @@ let questions = [
 					  'Repeatable Read']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Как создать Daemon поток?",
 			options: ['Вызвать метод setDaemon(true)',
 					  'Унаследоваться от класса Daemon',
@@ -379,6 +417,7 @@ let questions = [
 					  'Вызвать метод daemon()']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой из этих методов класса Thread статический?",
 			options: ['interrupted()',
 					  'interrupt()',
@@ -386,6 +425,7 @@ let questions = [
 					  'isAlive()']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой из этих методов класса Thread НЕ выбрасывает InterruptedException?",
 			options: ['interrupt()',
 					  'sleep()',
@@ -393,6 +433,7 @@ let questions = [
 					  'wait()']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой из этих методов класса Thread заставит процессор переключиться на обработку других потоков?",
 			options: ['yield()',
 					  'sleep()',
@@ -400,6 +441,7 @@ let questions = [
 					  'wait()']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Каким может быть максимальный приоритет в классе Thread?",
 			options: ['10',
 					  '5',
@@ -407,6 +449,7 @@ let questions = [
 					  '100']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какого состояния потока НЕ существует?",
 			options: ['IN PROGRESS',
 					  'NEW',
@@ -414,6 +457,7 @@ let questions = [
 					  'TERMINATED']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Как называется программирование, когда каждая следующая задача не ждёт окончания предыдущей?",
 			options: ['Асинхронное',
 					  'Синхронное',
@@ -421,6 +465,7 @@ let questions = [
 					  'Многопоточное']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Если у нас 1 поток записывает данные в переменную, а другие из неё читают, какое ключевое слово поможет нам обеспечить актуальность значения переменной?",
 			options: ['volatile',
 					  'synchronized',
@@ -428,6 +473,7 @@ let questions = [
 					  'static']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой из этих методов освобождает монитор?",
 			options: ['Wait',
 					  'Sleep',
@@ -435,6 +481,7 @@ let questions = [
 					  'NotifyAll']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Как называется ситуация, когда менее приоритетные потоки ждут слишком долгое время, прежде чем могут запуститься?",
 			options: ['Lock starvation',
 					  'Deadlock',
@@ -442,13 +489,15 @@ let questions = [
 					  'Collision']
 		},
 		{
-			definition: "Какого метода нет в интерфейсе Lock?",
+			module: 'Java Concurrency',
+			definition: "Какого метода НЕТ в интерфейсе Lock?",
 			options: ['isLocked',
 					  'lock',
 					  'unlock',
 					  'tryLock']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Что произойдёт, если после старта User Thread потока вызвать метод setDaemon(true)?",
 			options: ['Будет выброшено исключение IllegalThreadStateException',
 					  'Поток станет Daemon',
@@ -456,6 +505,7 @@ let questions = [
 					  'Поток остановится']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Что рекомендуется использовать для того, чтобы прервать один поток из другого потока?",
 			options: ['Методы interrupt() и isInterrupted()',
 					  'Метод stop()',
@@ -463,6 +513,7 @@ let questions = [
 					  'Метод terminate()']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой метод ExecutorService нужно использовать, чтобы подождать окончания работы потоков ThreadPool'a?",
 			options: ['awaitTermination',
 					  'wait',
@@ -470,6 +521,7 @@ let questions = [
 					  'shutDown']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какого параметра НЕТ в методе scheduleAtFixedRate класса ScheduledThreadPool?",
 			options: ['Callable<V> callable',
 					  'long initialDelay',
@@ -477,6 +529,7 @@ let questions = [
 					  'TimeUnit unit']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Что произойдёт, если у объекта Future вызвать метод get, когда результат из другого потока ещё не получен?",
 			options: ['Поток заблокируется и будет ждать результат',
 					  'Вернётся null',
@@ -484,20 +537,23 @@ let questions = [
 					  'Выбросится исключение']
 		},
 		{
-			definition: "Какого метода НЕТ в синхранизаторе Semaphore?",
+			module: 'Java Concurrency',
+			definition: "Какого метода НЕТ в синхронизаторе Semaphore?",
 			options: ['countDown()',
 					  'acquire()',
 					  'release()',
 					  'isFair()']
 		},
 		{
-			definition: "Какой метод синхранизатора CountDownLatch нужно использовать в методе run потоков для их приостановки, пока счётчик не достигнет 0?",
+			module: 'Java Concurrency',
+			definition: "Какой метод синхронизатора CountDownLatch нужно использовать в методе run потоков для их приостановки, пока счётчик не достигнет 0?",
 			options: ['await()',
 					  'acquire()',
 					  'tryAcquire()',
 					  'wait()']
 		},
 		{
+			module: 'Java Concurrency',
 			definition: "Какой класс можно использовать для того, чтобы 2 потока могли одновременно получить друг от друга данные?",
 			options: ['Exchanger',
 					  'CountDownLatch',
@@ -505,6 +561,7 @@ let questions = [
 					  'Future']
 		},
 		{
+			module: 'Java Core',
 			definition: "В какую область памяти попадёт объект, если он пережил хотя бы 1 сборку мусора?",
 			options: ['Survivor',
 					  'Eden',
@@ -512,6 +569,7 @@ let questions = [
 					  'Permanent generation']
 		},
 		{
+			module: 'Java Core',
 			definition: "Какого из этих Garbage Collector'ов не было до 7 Java?",
 			options: ['G1 Garbage Collector',
 					  'Parallel Garbage Collector',
@@ -519,6 +577,7 @@ let questions = [
 					  'Serial Garbage Collector']
 		},
 		{
+			module: 'Spring Core',
 			definition: "В какой компонент Spring'a входит AOP?",
 			options: ['Это отдельный компонент',
 					  'В Spring Core',
@@ -526,6 +585,7 @@ let questions = [
 					  'В Spring Web']
 		},
 		{
+			module: 'Spring Core',
 			definition: "На какой стадии жизни Bean'a отработает BeanPostProcessor?",
 			options: ['Pre-Initialization',
 					  'Instantiation',
@@ -533,6 +593,7 @@ let questions = [
 					  'AfterPropertiesSet']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какой параметр аннотации @Query нужно указать, чтобы использовать SQL?",
 			options: ['nativeQuery = true',
 					  'language = "sql"',
@@ -540,6 +601,7 @@ let questions = [
 					  'jpql = false']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какого параметра НЕТ в методе toPredicate интерфейса Specification, относящегося к Spring Data?",
 			options: ['Predicate<T> predicate',
 					  'Root<T> root',
@@ -547,13 +609,15 @@ let questions = [
 					  'CriteriaBuilder criteriaBuilder']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какое значение параметра Propagation аннотации @Transactional стоит по умолчанию?",
 			options: ['required',
-					  'supports"',
+					  'supports',
 					  'requires_new',
 					  'never']
 		},
 		{
+			module: 'Spring Data',
 			definition: 'Что произойдёт, если к началу вызова метода с аннотацией @Transactional(propagation="supports") у нас нет активной транзакции?',
 			options: ['Метод отработает без транзакции',
 					  'Создастся новая транзакция',
@@ -561,13 +625,15 @@ let questions = [
 					  'Метод будет проигнорирован']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какое значение параметра Propagation аннотации @Transactional нужно использовать, чтобы метод выполнился в отдельной транзакции?",
 			options: ['requires_new',
-					  'supports"',
+					  'supports',
 					  'required',
 					  'mandatory']
 		},
 		{
+			module: 'Spring Data',
 			definition: "Какое значение параметра Propagation аннотации @Transactional нужно использовать, чтобы в случае ROLLBACK'a мы могли вернуться к Save Point?",
 			options: ['nested',
 					  'supports',
@@ -575,6 +641,7 @@ let questions = [
 					  'mandatory']
 		},
 		{
+			module: 'Spring Data',
 			definition: 'Что произойдёт, если к началу вызова метода с аннотацией @Transactional(propagation="mandatory") у нас нет активной транзакции?',
 			options: ['Будет выброшено исключение',
 					  'Создастся новая транзакция',
@@ -582,6 +649,7 @@ let questions = [
 					  'Метод будет проигнорирован']
 		},
 		{
+			module: 'Spring Data',
 			definition: 'Что произойдёт, если к началу вызова метода с аннотацией @Transactional(propagation="required") у нас нет активной транзакции?',
 			options: ['Создастся новая транзакция',
 					  'Будет выброшено исключение',
@@ -589,13 +657,15 @@ let questions = [
 					  'Метод будет проигнорирован']
 		},
 		{
-			definition: 'Что произойдёт, если из нетранзакционного метода вызвать метода с аннотацией @Transactional(propagation="required")?',
+			module: 'Spring Data',
+			definition: 'Что произойдёт, если из нетранзакционного метода вызвать метод с аннотацией @Transactional(propagation="required")?',
 			options: ['Метод отработает без транзакции',
 					  'Создастся новая транзакция',
 					  'Будет выброшено исключение',
 					  'Метод будет проигнорирован']
 		},
 		{
+			module: 'Spring Boot',
 			definition: 'Какой из этих компонентов MVC отвечает за выбор отображения данных модели?',
 			options: ['View Resolver',
 					  'Controller',
@@ -603,6 +673,7 @@ let questions = [
 					  'Handler Mapping']
 		},
 		{
+			module: 'Spring Boot',
 			definition: 'Какую аннотацию включает в себя @RestController по сравнению с @Controller?',
 			options: ['@ResponseBody',
 					  '@RequestMapping',
@@ -610,13 +681,15 @@ let questions = [
 					  '@Http']
 		},
 		{
-			definition: "Что по умолчанию НЕ предосталяет Spring Boot по сравнению со Spring'ом?",
+			module: 'Spring Boot',
+			definition: "Что по умолчанию НЕ предосталяет Spring Boot из коробки?",
 			options: ['JUnit',
 					  'Автоконфигурация для Jackson',
 					  'Tomcat',
 					  'Специальный файл для конфигурации DataSource']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Какой класс/интерфейс Spring'а выполняет самую первую стадию подготовки Bean'ов?",
 			options: ['XmlBeanDefinitionReader',
 					  'ClassPathXmlApplicationContext',
@@ -624,6 +697,7 @@ let questions = [
 					  'BeanFactory']
 		},
 		{
+			module: 'Spring Core',
 			definition: "В какой момент в Spring'е создаются prototype-Bean'ы?",
 			options: ['Когда к ним происходит обращение в коде',
 					  'Когда поднимается Spring Context',
@@ -631,13 +705,15 @@ let questions = [
 					  "До Singleton-Bean'ов"]
 		},
 		{
-			definition: "Где хранятся инстансы prototype-Bean'ов?",
+			module: 'Spring Core',
+			definition: "Где Spring хранит инстансы prototype-Bean'ов?",
 			options: ['Нигде',
 					  "В Spring Container'е",
 					  "В BeanFactory",
 					  "В Spring Context'е"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "В какой момент BeanPostProcessor донастраивает Bean'ы?",
 			options: ['До того как они попадают в Spring Container',
 					  "Сразу после того, как они помещаются в Spring Container",
@@ -645,6 +721,7 @@ let questions = [
 					  "Не детерменировано"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "Какой из этих методов есть в интерфейсе BeanPostProcessor?",
 			options: ['postProcessBeforeInitialization',
 					  "init",
@@ -652,6 +729,7 @@ let questions = [
 					  "preDestroy"]
 		},
 		{
+			module: 'Spring Core',
 			definition: 'Что будет, если в XML properties файл добавить "context:annotation-config"?',
 			options: ["Spring создаст Bean'ы для BeanPostProcessor'ов",
 					  "Ничего не произойдёт",
@@ -659,6 +737,7 @@ let questions = [
 					  "Spring будет использовать Bean с аннотацией @Configuration вместо XML properties"]
 		},
 		{
+			module: 'Общие вопросы',
 			definition: "Что произойдёт, если при использовании HTTP метода PUT указанного ресурса не существует?",
 			options: ['Он будет создан',
 					  "Ничего не произойдёт",
@@ -666,6 +745,7 @@ let questions = [
 					  'Error 404 "Resource not found"']
 		},
 		{
+			module: 'Spring Core',
 			definition: "Что мы будем использовать для 3 фазы 3-фазового конструктора при настройке Bean'a в Spring'e?",
 			options: ['ContextListener',
 					  "Обычный конструктор Java",
@@ -673,6 +753,7 @@ let questions = [
 					  "В Spring'e нельзя написать 3-фазовый конструктор"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "В какой момент жизненного цикла Bean'a в Spring'e отработает BeanFactoryPostProcessor?",
 			options: ["После BeanDefinitionReader'a, но до BeanFactory",
 					  "До BeanDefinitionReader'a",
@@ -680,6 +761,7 @@ let questions = [
 					  "После BeanPostProcessor'а"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "Чем в Spring'e является ClassPathBeanDefinitionScanner?",
 			options: ["ResourceLoaderAware",
 					  "BeanFactoryPostProcessor",
@@ -687,6 +769,7 @@ let questions = [
 					  "XmlBeanDefinitionReader"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "Чем в Spring'e является ConfigurationClassPostProcessor?",
 			options: ["BeanFactoryPostProcessor",
 					  "ResourceLoaderAware",
@@ -694,6 +777,7 @@ let questions = [
 					  "XmlBeanDefinitionReader"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "Кто в Spring'e регистрирует ConfigurationClassPostProcessor?",
 			options: ["AnnotationConfigApplicationContext",
 					  "XmlApplicationContext",
@@ -701,11 +785,68 @@ let questions = [
 					  "XmlBeanDefinitionReader"]
 		},
 		{
+			module: 'Spring Core',
 			definition: "Какой интерфейс Spring'а нужно имплементировать, чтобы создать custom scope?",
 			options: ["BeanFactoryPostProcessor",
 					  "ApplicationContext",
 					  "BeanPostProcessor",
 					  "BeanDefinitionReader"]
+		},
+		{
+			module: 'Spring Data',
+			definition: "Что возвращает метод findById интерфейса CrudRepository в Spring'е?",
+			options: ["Optional<T>",
+					  "T",
+					  "Object",
+					  "Entity"]
+		},
+		{
+			module: 'Java Core',
+			definition: "Что согласно порядку инициализации объекта в Java отработает последним?",
+			options: ["Конструктор",
+					  "Статический блок",
+					  "Нестатический блок",
+					  "Конструктор предка"]
+		},
+		{
+			module: 'Java Core',
+			definition: "Экземпляр какого класса можно добавить в List&lt;? super Dog&gt; dogs? (иерархия: Mops -> Dog -> Animal -> Object)",
+			options: ["Mops",
+					  "Animal",
+					  "Object",
+					  "Это неизменяемая коллекция"]
+		},
+		{
+			module: 'Java Core',
+			definition: "Экземпляр какого класса можно получить из List&lt;? extends Dog&gt; dogs? (иерархия: Mops/Kolli -> Dog -> Animal -> Object)",
+			options: ["Dog",
+					  "Mops",
+					  "Kolli",
+					  "Это нечитаемая коллекция"]
+		},
+		{
+			module: 'Java Concurrency',
+			definition: "Как называется специальный объект для синхронизации потоков, прикреплённый к каждому объекту в Java и напрямую доступный только для JVM?",
+			options: ["Мьютекс",
+					  "Монитор",
+					  "Семафор",
+					  "Маркер"]
+		},
+		{
+			module: 'Java Concurrency',
+			definition: "Каким методом мы можем инкрементировать значение AtomicInteger?",
+			options: ["incrementAndGet()",
+					  "add(1)",
+					  "increment()",
+					  "addOne()"]
+		},
+		{
+			module: 'Java Concurrency',
+			definition: "Что произойдёт, если в то время, как один поток итерирует ArrayList, другой поток попытается удалить из него элемент?",
+			options: ["ConcurrentModificationException",
+					  "Элемент НЕ будет удалён",
+					  "Элемент удалится ПОСЛЕ итерации",
+					  "Элемент удалится ПЕРЕД итерацией"]
 		}
 ];
  
@@ -719,7 +860,34 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function load(){
+const modules = ['Java Core', 'Java Concurrency', 'Spring Core', 'Spring Data', 'Spring Boot', 'Общие вопросы'];
+const learned = ['Английский язык'];
+
+let current_module;
+let current_module_id;
+let questions;
+
+function module(num){
+	cleanUp();
+	$('.module').hide();
+	$('#game').show();
+	current_module_id = num;
+	current_module = modules[num];
+	questions = questions.filter(q => q.module == current_module);
 	shuffle(questions);
-	mirror('Для изучения Java Вам нужно будет ответить на вопросы (1 правильный вариант ответа из 4)', 3, 'black');
+	randomAnswers();
+	$('#questions_count').html(questions_count + 1);
+	$('#questions_total').html(questions.length);
+	mirror(questions[questions_count].definition, 20, 'blue');
+}
+
+function cleanUp(){
+		emptyOptions();
+		questions_count=0;
+		correct=0;
+		questions = JSON.parse(JSON.stringify(questions_bank));
+}
+
+function load(){
+	mirror('Для изучения Java Вам нужно будет ответить на вопросы (1 правильный вариант ответа из 4)', 10, 'black');
 }
