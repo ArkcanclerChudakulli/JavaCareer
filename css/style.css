@@ -29,7 +29,7 @@
 }
 
 #mirror{
-	height: 400px;
+	height: 200px;
 	width: 1000px;
 	/* background:url("../img/mirror.png"); */
 	background-repeat: no-repeat;
@@ -57,9 +57,12 @@
 	color: red;
 }
 
-.skill{
-	background-color: rgba(255, 255, 255, 0.8);
-	font-size: 100px;
+.marron{
+	color: #AF601A;
+}
+
+#skill{
+	font-size: 25px;
 }
 .next{
 	font-size: 20px;
@@ -97,9 +100,13 @@
     to { opacity: 0; /* Прозрачный текст */ }
    }
    
-.hint:hover {
+.pointer:hover {
 	cursor: pointer;
 	opacity: 0.5;
+}
+
+.completed:hover {
+	cursor: not-allowed;
 }
 
 .circle {
